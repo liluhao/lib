@@ -1,4 +1,4 @@
-module github.com/llh/lib
+module github.com/liluhao/lib
 
 go 1.16
 

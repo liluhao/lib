@@ -5,6 +5,12 @@
 
 lib 包含许多有用的 golang 工具包。因此，它将经常更新。
 
+## 项目下载
+
+```go
+go get github.com/liluhao/lib
+```
+
 ## amqplib
 
 使用这个资源: [cony](https://github.com/assembla/cony)

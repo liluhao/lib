@@ -3,7 +3,7 @@ package ratelimitlib
 import (
 	"context"
 	"github.com/go-redis/redis/v8"
-	"github.com/llh/lib/redislib"
+	"github.com/liluhao/lib/redislib"
 	"time"
 )
 
