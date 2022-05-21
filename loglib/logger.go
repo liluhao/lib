@@ -1,15 +1,16 @@
-// As a quick start for loglib:
-//	logger, err := loglib.NewProductionLogger()
-//	if err != nil {
-//		panic(err)
-//	}
-//	logger.Info("test logger", zap.String("hello", "world"))
-//
-//  logger, err := loglib.NewProductionLogger()
-//	if err != nil {
-//		panic(err)
-//	}
-//	logger.Log(loglib.INFO, "test logger", "hello", "world")
+/*举例:
+	logger, err := loglib.NewProductionLogger()
+	if err != nil {
+		panic(err)
+	}
+	logger.Info("test logger", zap.String("hello", "world"))
+
+  logger, err := loglib.NewProductionLogger()
+	if err != nil {
+		panic(err)
+	}
+	logger.Log(loglib.INFO, "test logger", "hello", "world")
+*/
 package loglib
 
 import (
@@ -19,10 +20,12 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+//二次封装Logger
 type Logger struct {
 	*zap.Logger
 }
 
+//传入配置来创造Looger;适用于生产环境
 func NewProductionLogger(options ...zap.Option) (*Logger, error) {
 	logger, err := zap.NewProduction(options...)
 	if err != nil {
@@ -31,6 +34,7 @@ func NewProductionLogger(options ...zap.Option) (*Logger, error) {
 	return &Logger{logger}, nil
 }
 
+//传入配置来创造Looger;适用于开发环境
 func NewDevelopmentLogger(options ...zap.Option) (*Logger, error) {
 	logger, err := zap.NewDevelopment(options...)
 	if err != nil {
@@ -39,6 +43,7 @@ func NewDevelopmentLogger(options ...zap.Option) (*Logger, error) {
 	return &Logger{logger}, nil
 }
 
+///不提供传入配置来创造Looger;
 func NewNopLogger() *Logger {
 	return &Logger{zap.NewNop()}
 }

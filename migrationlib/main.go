@@ -1,11 +1,12 @@
-// As a quick start:
-// 	migrationlib.NewMigrateLib(migrationlib.Config{
-//		DatabaseDriver: migrationlib.PostgresDriver,
-//		DatabaseURL:    "postgres://postgres:postgres@localhost:5432/migrationlib?sslmode=disable",
-//		SourceDriver:   migrationlib.FileDriver,
-//		SourceURL:      "file://migrations",
-//		TableName:      "migration_versions",
-//	}).Up()
+/*举例:
+ 	migrationlib.NewMigrateLib(migrationlib.Config{
+		DatabaseDriver: migrationlib.PostgresDriver,
+		DatabaseURL:    "postgres://postgres:postgres@localhost:5432/migrationlib?sslmode=disable",
+		SourceDriver:   migrationlib.FileDriver,
+		SourceURL:      "file://migrations",
+		TableName:      "migration_versions",
+	}).Up()
+*/
 package migrationlib
 
 import (
@@ -13,6 +14,7 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
+//对Commad接口的二次封装
 type MigrationLib interface {
 	Command
 }

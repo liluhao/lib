@@ -18,9 +18,14 @@ type Config struct {
 	DatabaseDriver DatabaseDriver
 	DatabaseURL    string
 	SourceDriver   SourceDriver
-	SourceURL      string
+	SourceURL      string //指定数据库的存放路径
 
 	TableName string
+}
+
+//二次封装，实现了Command接口
+type MigrateCommand struct {
+	config Config
 }
 
 func newMigrateCmd(c Config) *MigrateCommand {
@@ -29,16 +34,15 @@ func newMigrateCmd(c Config) *MigrateCommand {
 	}
 }
 
-type MigrateCommand struct {
-	config Config
-}
-
-func (m *MigrateCommand) prepare() (*migrate.Migrate, error) {
-	db, err := sql.Open(string(m.config.DatabaseDriver), m.config.DatabaseURL)
+//配置数据库
+func (m *MigrateCommand) prepare() (*migrate.Migrate, error) { //指针接收者
+	//连接数据库
+	db, err := sql.Open(string(m.config.DatabaseDriver), m.config.DatabaseURL) //使用go自带database/sql;注意第一个参数必须转化成string类型，否则报错
 	if err != nil {
 		return nil, err
 	}
 
+	//配置资源驱动
 	var sourceDriver source.Driver
 	switch m.config.SourceDriver {
 	case FileDriver:
@@ -51,6 +55,7 @@ func (m *MigrateCommand) prepare() (*migrate.Migrate, error) {
 		return nil, err
 	}
 
+	//配置数据库驱动
 	var databaseDriver database.Driver
 	switch m.config.DatabaseDriver {
 	case PostgresDriver:
@@ -61,16 +66,20 @@ func (m *MigrateCommand) prepare() (*migrate.Migrate, error) {
 	default:
 		return nil, errors.New("not supported database driver")
 	}
+
+	//调用外部库 migrate.NewWithInstance返回*migrate.Migrate
 	mi, err := migrate.NewWithInstance(string(m.config.SourceDriver),
 		sourceDriver,
 		string(m.config.DatabaseDriver),
-		databaseDriver)
+		databaseDriver,
+	)
 	if err != nil {
 		return nil, err
 	}
 	return mi, nil
 }
 
+//启动数据库
 func (m MigrateCommand) Up() error {
 	mi, err := m.prepare()
 	if err != nil {
@@ -79,6 +88,7 @@ func (m MigrateCommand) Up() error {
 	return mi.Up()
 }
 
+//
 func (m MigrateCommand) UpTo(limit uint) error {
 	mi, err := m.prepare()
 	if err != nil {
